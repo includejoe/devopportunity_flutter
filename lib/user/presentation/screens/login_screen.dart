@@ -1,6 +1,8 @@
 import 'package:dev_opportunity/base/di/get_it.dart';
+import 'package:dev_opportunity/base/presentation/screens/main_screen.dart';
 import 'package:dev_opportunity/base/presentation/widgets/buttons/main_button.dart';
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
+import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
 import 'package:dev_opportunity/base/utils/input_validators/email.dart';
 import 'package:dev_opportunity/base/utils/input_validators/password.dart';
 import 'package:dev_opportunity/user/presentation/screens/register_screen.dart';
@@ -34,6 +36,33 @@ class _LoginScreenState extends State<LoginScreen> {
   // errors
   String? _emailError;
   String? _passwordError;
+
+  void loginUser(context) async {
+    setState(() { _isLoading = true; });
+
+    bool successful = await _viewModel.loginUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
+    setState(() { _isLoading = false; });
+
+    if(successful) {
+      _emailController.clear();
+      _passwordController.clear();
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen())
+      );
+    } else {
+      showSnackBar(
+          context,
+          "Invalid credentials",
+          Colors.redAccent
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -141,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       if(errors.every((error) => error == null)) {
                         FocusScope.of(context).unfocus();
-                        // login function
+                        loginUser(context);
                       }
                     },
                   ),

@@ -19,13 +19,14 @@ class UserViewModel {
   }
 
   // Register New User
-  Future<String> registerUser({
+  Future<bool> registerUser({
     required String email,
     required String password,
     required String name,
     required String headline,
   }) async {
-    String response = "";
+    bool successful = false;
+
     try {
       UserCredential credentials = await _auth.createUserWithEmailAndPassword(
           email: email,
@@ -41,42 +42,28 @@ class UserViewModel {
 
       await _firestore.collection("users").doc(credentials.user!.uid).set(user.toJson());
 
-      response = "success";
-    } on FirebaseAuthException catch(error) {
-      if(error.code == "invalid-email") {
-        response = "Your email is not a valid email";
-      } else if(error.code == "weak-password") {
-        response = "Your password must be 6 characters or more";
-      }
+      successful = true;
     } catch(error) {
-      response = error.toString();
+      successful = false;
     }
 
-    return response;
+    return successful;
   }
 
   // Login User
-  Future<String> loginUser({
+  Future<bool> loginUser({
     required String email,
     required String password,
   }) async {
-    String response = "";
+    bool successful = false;
 
     try {
-      if(email.isNotEmpty || password.isNotEmpty) {
-        await _auth.signInWithEmailAndPassword(email: email, password: password);
-        response = "success";
-      }
-    } on FirebaseAuthException catch(error) {
-      if(error.code == "wrong-password") {
-        response = "Invalid Credentials";
-      } else if(error.code == "user-not-found") {
-        response = "Invalid Credentials";
-      }
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      successful = true;
     } catch (error) {
-      response = error.toString();
+      successful = false;
     }
 
-    return response;
+    return successful;
   }
 }

@@ -3,9 +3,11 @@ import 'package:dev_opportunity/base/presentation/widgets/buttons/main_button.da
 import 'package:dev_opportunity/base/presentation/widgets/inputs/password_input.dart';
 import 'package:dev_opportunity/base/presentation/widgets/inputs/text_input.dart';
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
+import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
 import 'package:dev_opportunity/base/utils/input_validators/email.dart';
 import 'package:dev_opportunity/base/utils/input_validators/password.dart';
 import 'package:dev_opportunity/base/utils/input_validators/text.dart';
+import 'package:dev_opportunity/user/presentation/screens/login_screen.dart';
 import 'package:dev_opportunity/user/presentation/view_models/user_view_model.dart';
 import 'package:dev_opportunity/user/presentation/widgets/bottom_info.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,6 +45,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _headlineError;
   String? _passwordError;
   String? _confirmPasswordError;
+
+  void registerUser(context) async {
+    setState(() { _isLoading = true; });
+
+    bool successful = await _viewModel.registerUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      name: _nameController.text,
+      headline: _headlineController.text,
+    );
+
+    setState(() { _isLoading = false; });
+
+    if(successful) {
+      _emailController.clear();
+      _nameController.clear();
+      _headlineController.clear();
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+
+      showSnackBar(
+        context,
+        "User registered successfully, please login to continue",
+        Colors.green
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen())
+      );
+    } else {
+      showSnackBar(
+        context,
+        "User registration failed, something went wrong",
+        Colors.redAccent
+      );
+    }
+  }
 
   @override void dispose() {
     super.dispose();
@@ -117,7 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     inputAction: TextInputAction.next,
                     prefixIcon: CupertinoIcons.person_fill,
                     label: "Name",
-                    placeholder: "ex. John Doe",
+                    placeholder: "ex. John Doe / COMPANY NAME",
                     error: _nameError,
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_headlineFocusNode);
@@ -131,7 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     inputAction: TextInputAction.next,
                     prefixIcon: CupertinoIcons.bag_fill,
                     label: "Headline",
-                    placeholder: "ex. Backend Developer",
+                    placeholder: "ex. Backend Developer / COMPANY HEADLINE",
                     error: _headlineError,
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -184,7 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         if(errors.every((error) => error == null)) {
                           FocusScope.of(context).unfocus();
-                          // register function
+                          registerUser(context);
                         }
                       },
                       text: "REGISTER"
