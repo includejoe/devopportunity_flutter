@@ -1,4 +1,5 @@
 import 'package:dev_opportunity/base/di/get_it.dart';
+import 'package:dev_opportunity/base/presentation/screens/main_screen.dart';
 import 'package:dev_opportunity/base/presentation/theme/theme_constants.dart';
 import 'package:dev_opportunity/base/presentation/theme/theme_provider.dart';
 import 'package:dev_opportunity/base/providers/user_provider.dart';
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     if (snapshot.hasData) {
-                      return const Placeholder(); // return main screen
+                      return const MainScreen(); // return main screen
                     } else if (snapshot.hasError) {
                       return Center(
                         child: Text("${snapshot.error}"),
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
                     );
                   }
 
-                  return const LoginScreen(); // return login screen
+                  return const MainScreen(); // return login screen
                 },
               )
           );

@@ -161,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       FocusScope.of(context).unfocus();
                     },
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(height: 25,),
                   _isLoading ? const Loader(size: 24)  : Button(
                       onTap: () {
                         setState(() {

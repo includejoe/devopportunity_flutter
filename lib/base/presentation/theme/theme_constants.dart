@@ -42,6 +42,11 @@ ThemeData lightTheme = ThemeData(
           color: Colors.black,
           fontWeight: FontWeight.bold
       ),
+      headlineLarge: GoogleFonts.poppins(
+          fontSize: 28,
+          color: Colors.black,
+          fontWeight: FontWeight.bold
+      ),
       labelMedium: GoogleFonts.poppins(
           fontSize: 22,
           color: Colors.black,
@@ -93,6 +98,11 @@ ThemeData darkTheme = ThemeData(
       ),
       headlineMedium: GoogleFonts.poppins(
           fontSize: 16,
+          color: Colors.white,
+          fontWeight: FontWeight.bold
+      ),
+      headlineLarge: GoogleFonts.poppins(
+          fontSize: 28,
           color: Colors.white,
           fontWeight: FontWeight.bold
       ),
