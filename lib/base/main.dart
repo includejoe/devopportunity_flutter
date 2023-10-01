@@ -6,15 +6,19 @@ import 'package:dev_opportunity/user/presentation/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+
   await Firebase.initializeApp();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   loadAppResources();
   runApp(const MyApp());
@@ -25,7 +29,7 @@ Future main() async {
 void loadAppResources({BuildContext? context}) async {
   initialize();
   await Future.delayed(const Duration(seconds: 1));
-  // FlutterNativeSplash.remove();
+  FlutterNativeSplash.remove();
 }
 
 

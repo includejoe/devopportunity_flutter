@@ -169,7 +169,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     inputAction: TextInputAction.next,
                     prefixIcon: CupertinoIcons.person_fill,
                     enabled: true,
-                    label: "Name",
+                    label: "Full Name",
                     error: _nameError,
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_headlineFocusNode);

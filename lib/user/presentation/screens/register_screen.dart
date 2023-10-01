@@ -154,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     focusNode: _nameFocusNode,
                     inputAction: TextInputAction.next,
                     prefixIcon: CupertinoIcons.person_fill,
-                    label: "Name",
+                    label: "Full Name",
                     placeholder: "ex. John Doe / COMPANY NAME",
                     error: _nameError,
                     onFieldSubmitted: (_) {
