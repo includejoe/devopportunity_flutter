@@ -13,6 +13,16 @@ class _JobsScreenState extends State<JobsScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: theme.colorScheme.primary,
+        title: Text(
+          "Latest Jobs",
+          style: theme.textTheme.headlineMedium?.copyWith(
+              color: theme.colorScheme.onPrimary
+          ),
+        ),
+      ),
       body: Center(
         child: Text(
           'JOBS SCREEN',

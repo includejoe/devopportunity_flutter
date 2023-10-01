@@ -66,4 +66,17 @@ class UserViewModel {
 
     return successful;
   }
+
+  Future<bool> signOut() async {
+    bool successful = false;
+
+    try {
+      await _auth.signOut();
+      successful = true;
+    } catch(error) {
+      successful = false;
+    }
+
+    return successful;
+  }
 }

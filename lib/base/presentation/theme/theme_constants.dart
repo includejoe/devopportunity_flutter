@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 const primaryColor = Color(0xFF216FDE);
 const errorColor = Color(0xFFB62828);
-const darkBgColor = Color(0xFF0d0d0d);
+const darkBgColor = Color(0xff02060a);
 
 ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
@@ -28,12 +28,12 @@ ThemeData lightTheme = ThemeData(
     ),
     textTheme: TextTheme(
       bodyMedium: GoogleFonts.poppins(
-          fontSize: 14,
+          fontSize: 16,
           color: Colors.black,
           fontWeight: FontWeight.normal
       ),
       bodySmall: GoogleFonts.poppins(
-          fontSize: 11,
+          fontSize: 12,
           color: Colors.black,
           fontWeight: FontWeight.w500
       ),
@@ -87,12 +87,12 @@ ThemeData darkTheme = ThemeData(
     ),
     textTheme: TextTheme(
       bodyMedium: GoogleFonts.poppins(
-          fontSize: 14,
+          fontSize: 16,
           color: Colors.white,
           fontWeight: FontWeight.normal
       ),
       bodySmall: GoogleFonts.poppins(
-          fontSize: 11,
+          fontSize: 12,
           color: Colors.black,
           fontWeight: FontWeight.w500
       ),
