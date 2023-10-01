@@ -1,3 +1,4 @@
+import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/theme/theme_constants.dart';
 import 'package:dev_opportunity/base/presentation/theme/theme_provider.dart';
 import 'package:dev_opportunity/base/providers/user_provider.dart';
@@ -14,14 +15,30 @@ Future main() async {
     DeviceOrientation.portraitUp,
   ]);
   await Firebase.initializeApp();
+
+  loadAppResources();
   runApp(const MyApp());
 }
+
+
+// function to run before splash screen is done
+void loadAppResources({BuildContext? context}) async {
+  initialize();
+
+  await Future.delayed(const Duration(seconds: 1));
+  // FlutterNativeSplash.remove();
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: primaryColor,
+    ));
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),

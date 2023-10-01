@@ -1,7 +1,9 @@
+import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/widgets/buttons/main_button.dart';
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/base/utils/input_validators/email.dart';
 import 'package:dev_opportunity/base/utils/input_validators/password.dart';
+import 'package:dev_opportunity/user/presentation/screens/register_screen.dart';
 import 'package:dev_opportunity/user/presentation/widgets/bottom_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final UserViewModel _viewModel = UserViewModel();
+  final  _viewModel = getIt<UserViewModel>();
   bool _isLoading = false;
 
   // controllers
@@ -55,18 +57,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.25,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.18,),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.18,
+                    height: MediaQuery.of(context).size.height * 0.25,
                     child: Center(
-                        child: Text(
-                          "Dev Opportunity",
-                          style: GoogleFonts.robotoCondensed(
-                            fontSize: 50,
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w800,
-                            fontStyle: FontStyle.italic
-                          )
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "assets/logo.png",
+                              color: theme.colorScheme.primary,
+                              height: 100,
+                            ),
+                            const SizedBox(height: 15,),
+                            Text(
+                              "Dev Opportunity",
+                              style: GoogleFonts.robotoCondensed(
+                                fontSize: 40,
+                                color: theme.colorScheme.primary,
+                                fontWeight: FontWeight.w800,
+                                fontStyle: FontStyle.italic
+                              )
+                            ),
+                          ],
                         )
                     ),
                   ),
@@ -77,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     inputAction: TextInputAction.next,
                     prefixIcon: CupertinoIcons.envelope_fill,
                     label: "Email",
-                    placeholder: "johndoe@gmail.com",
+                    placeholder: "ex. johndoe@gmail.com",
                     error: _emailError,
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -140,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Placeholder()
+                                builder: (context) => const RegisterScreen()
                             )
                         );
                       }
