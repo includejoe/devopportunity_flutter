@@ -1,4 +1,6 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dev_opportunity/base/utils/storage_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dev_opportunity/user/domain/models/user.dart';
 
@@ -7,9 +9,8 @@ class UserViewModel {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Get User Details
-  Future<UserModel> getUserDetails() async {
+  Future<UserModel?> getUserDetails() async {
     User currentUser = _auth.currentUser!;
-
     DocumentSnapshot snapshot = await _firestore
         .collection("users")
         .doc(currentUser.uid)
@@ -67,6 +68,39 @@ class UserViewModel {
     return successful;
   }
 
+  // Update User
+  Future<bool> updateUser({
+    required String name,
+    required String headline,
+    required String bio,
+    required String? imageUrl,
+    Uint8List? profileImage
+  }) async {
+    bool successful = false;
+
+    if (profileImage != null) {
+      imageUrl = await StorageMethods().uploadImageToStorage("profile_pics", profileImage, false);
+    }
+
+    UserModel user = UserModel(
+      email: _auth.currentUser!.email!,
+      uid: _auth.currentUser!.uid,
+      name: name,
+      headline: headline,
+      bio: bio,
+      profilePic: imageUrl
+    );
+
+    try {
+      await _firestore.collection("users").doc(_auth.currentUser!.uid).set(user.toJson());
+      successful = true;
+    } catch(error) {
+      successful = false;
+    }
+    return successful;
+  }
+
+  // Sign Out
   Future<bool> signOut() async {
     bool successful = false;
 

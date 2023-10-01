@@ -2,7 +2,6 @@ import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/screens/main_screen.dart';
 import 'package:dev_opportunity/base/presentation/theme/theme_constants.dart';
 import 'package:dev_opportunity/base/presentation/theme/theme_provider.dart';
-import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/user/presentation/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,6 @@ Future main() async {
 // function to run before splash screen is done
 void loadAppResources({BuildContext? context}) async {
   initialize();
-
   await Future.delayed(const Duration(seconds: 1));
   // FlutterNativeSplash.remove();
 }
@@ -42,7 +40,6 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: Consumer<ThemeProvider>(

@@ -33,7 +33,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
 
   // focus nodes
-  final _emailFocusNode = FocusNode();
   final _nameFocusNode = FocusNode();
   final _headlineFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
@@ -139,7 +138,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextInput(
                     controller: _emailController,
                     textInputType: TextInputType.emailAddress,
-                    focusNode: _emailFocusNode,
                     inputAction: TextInputAction.next,
                     prefixIcon: CupertinoIcons.envelope_fill,
                     placeholder: "ex. johndoe@gmail.com",

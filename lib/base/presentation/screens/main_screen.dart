@@ -64,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
                 label: 'Post Job'
             ),
             BottomNavigationBarItem(
-                icon: Icon(_currentScreen == 3 ?
+                icon: Icon(_currentScreen == 2 ?
                 CupertinoIcons.gear_solid :
                 CupertinoIcons.gear
                 ),
