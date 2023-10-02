@@ -1,12 +1,17 @@
+import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/widgets/buttons/dialog_button.dart';
-import 'package:dev_opportunity/base/presentation/widgets/buttons/main_button.dart';
 import 'package:dev_opportunity/base/presentation/widgets/inputs/date_input.dart';
 import 'package:dev_opportunity/base/presentation/widgets/inputs/text_input.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
+import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
+import 'package:dev_opportunity/base/utils/input_validators/text.dart';
+import 'package:dev_opportunity/user/presentation/view_models/experience_view_model.dart';
 import 'package:flutter/material.dart';
 
 class ExperienceForm extends StatefulWidget {
-  const ExperienceForm({super.key});
+  const ExperienceForm({super.key, required this.getUserExperiences});
+  final void Function() getUserExperiences;
+
 
   @override
   State<ExperienceForm> createState() => _ExperienceFormState();
@@ -14,6 +19,8 @@ class ExperienceForm extends StatefulWidget {
 
 class _ExperienceFormState extends State<ExperienceForm> {
   bool _experienceToPresent = true;
+  final _viewModel = getIt<ExperienceViewModel>();
+  bool _isLoading = false;
 
   // controllers
   final _companyController = TextEditingController();
@@ -23,7 +30,6 @@ class _ExperienceFormState extends State<ExperienceForm> {
   final _descriptionController = TextEditingController();
 
   // focus nodes
-  final _companyFocusNode = FocusNode();
   final _jobTitleFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
 
@@ -34,9 +40,53 @@ class _ExperienceFormState extends State<ExperienceForm> {
   String? _endDateError;
   String? _descriptionError;
 
+  void addExperience(context) async {
+    setState(() { _isLoading = true;});
+    bool successful = await _viewModel.addExperience(
+      company: _companyController.text,
+      jobTitle: _jobTitleController.text,
+      description: _descriptionController.text,
+      startDate: _startDateController.text,
+      endDate: _endDateController.text,
+    );
+
+    if(successful) {
+      showSnackBar(context, "Experience added successfully", Colors.green);
+      widget.getUserExperiences();
+    } else {
+      showSnackBar(context, "Something went wrong", Colors.red);
+    }
+
+    Navigator.pop(context);
+    setState(() { _isLoading = false;});
+  }
+
+  @override
+  void dispose() {
+    _companyController.dispose();
+    _jobTitleController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+    _descriptionController.dispose();
+    _jobTitleFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    _endDateController.text = "Present";
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
   final theme = Theme.of(context);
+  final companyValidator = TextValidator(context);
+  final jobTitleValidator = TextValidator(context);
+  final startDateValidator = TextValidator(context);
+  final endDateValidator = TextValidator(context);
+  final descriptionValidator = TextValidator(context);
 
     return Dialog(
         shape: RoundedRectangleBorder(
@@ -44,7 +94,8 @@ class _ExperienceFormState extends State<ExperienceForm> {
         ),
         backgroundColor: theme.colorScheme.background,
         insetPadding: const EdgeInsets.all(25),
-        child: SingleChildScrollView(
+        child: _isLoading ? const Center(child: Loader(size: 24)) :
+        SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -151,7 +202,28 @@ class _ExperienceFormState extends State<ExperienceForm> {
                     ),
                     const SizedBox(width: 10,),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          _companyError = companyValidator(_companyController.text);
+                          _jobTitleError = jobTitleValidator(_jobTitleController.text);
+                          _startDateError = startDateValidator(_startDateController.text);
+                          _endDateError = endDateValidator(_endDateController.text);
+                          _descriptionError = descriptionValidator(_descriptionController.text);
+                        });
+
+                        final errors = [
+                          _companyError,
+                          _jobTitleError,
+                          _startDateError,
+                          _endDateError,
+                          _descriptionError,
+                        ];
+
+                        if(errors.every((error) => error == null)) {
+                          FocusScope.of(context).unfocus();
+                          addExperience(context);
+                        }
+                      },
                       child: const DialogButton(
                         btnText: "Save",
                         height: 40,
