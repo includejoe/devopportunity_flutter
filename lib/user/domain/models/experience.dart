@@ -5,6 +5,7 @@ class ExperienceModel {
   final String userId;
   final String company;
   final String jobTitle;
+  final String description;
   final String startDate;
   final String endDate;
 
@@ -13,6 +14,7 @@ class ExperienceModel {
     required this.userId,
     required this.company,
     required this.jobTitle,
+    required this.description,
     required this.startDate,
     required this.endDate,
   });
@@ -22,6 +24,7 @@ class ExperienceModel {
     "userId": userId,
     "company": company,
     "jobTitle": jobTitle,
+    "description": description,
     "startDate": startDate,
     "endDate": endDate
   };
@@ -34,6 +37,7 @@ class ExperienceModel {
       userId: snapshot["userId"],
       company: snapshot["company"],
       jobTitle: snapshot["jobTitle"],
+      description: snapshot["description"],
       startDate: snapshot["startDate"],
       endDate: snapshot["endDate"]
     );

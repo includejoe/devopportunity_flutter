@@ -24,7 +24,7 @@ Future<dynamic> confirmationDialog({
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        backgroundColor: theme.colorScheme.surface,
+        backgroundColor: theme.colorScheme.background,
         children: [
           SimpleDialogOption(
             onPressed: () {

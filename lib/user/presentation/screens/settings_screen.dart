@@ -2,8 +2,8 @@ import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/widgets/dialogs/confirmation_dialog.dart';
 import 'package:dev_opportunity/base/presentation/widgets/list_item.dart';
 import 'package:dev_opportunity/user/presentation/screens/edit_profile_screen.dart';
+import 'package:dev_opportunity/user/presentation/screens/employment_history_screen.dart';
 import 'package:dev_opportunity/user/presentation/screens/login_screen.dart';
-import 'package:dev_opportunity/user/presentation/screens/resume_screen.dart';
 import 'package:dev_opportunity/user/presentation/view_models/user_view_model.dart';
 import 'package:dev_opportunity/user/presentation/widgets/theme_switch.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,12 +37,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       ListItem(
         icon: CupertinoIcons.doc_append,
-        text: "Resume",
+        text: "Employment History",
         onTap: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const ResumeScreen()
+                  builder: (context) => const EmploymentHistoryScreen()
               )
           );
         },
