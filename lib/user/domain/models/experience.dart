@@ -26,7 +26,7 @@ class ExperienceModel {
     "jobTitle": jobTitle,
     "description": description,
     "startDate": startDate,
-    "endDate": endDate
+    "endDate": endDate,
   };
 
   static ExperienceModel fromSnap(DocumentSnapshot snap) {
@@ -39,7 +39,7 @@ class ExperienceModel {
       jobTitle: snapshot["jobTitle"],
       description: snapshot["description"],
       startDate: snapshot["startDate"],
-      endDate: snapshot["endDate"]
+      endDate: snapshot["endDate"],
     );
   }
 }

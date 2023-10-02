@@ -5,12 +5,15 @@ import 'package:dev_opportunity/base/presentation/widgets/inputs/text_input.dart
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
 import 'package:dev_opportunity/base/utils/input_validators/text.dart';
+import 'package:dev_opportunity/user/domain/models/experience.dart';
 import 'package:dev_opportunity/user/presentation/view_models/experience_view_model.dart';
 import 'package:flutter/material.dart';
 
 class ExperienceForm extends StatefulWidget {
-  const ExperienceForm({super.key, required this.getUserExperiences});
+  const ExperienceForm({super.key, required this.getUserExperiences, this.experience});
+
   final void Function() getUserExperiences;
+  final ExperienceModel? experience;
 
 
   @override
@@ -30,7 +33,7 @@ class _ExperienceFormState extends State<ExperienceForm> {
   final _descriptionController = TextEditingController();
 
   // focus nodes
-  final _jobTitleFocusNode = FocusNode();
+  final _companyFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
 
   // errors
@@ -43,6 +46,7 @@ class _ExperienceFormState extends State<ExperienceForm> {
   void addExperience(context) async {
     setState(() { _isLoading = true;});
     bool successful = await _viewModel.addExperience(
+      id: widget.experience?.id,
       company: _companyController.text,
       jobTitle: _jobTitleController.text,
       description: _descriptionController.text,
@@ -68,14 +72,29 @@ class _ExperienceFormState extends State<ExperienceForm> {
     _startDateController.dispose();
     _endDateController.dispose();
     _descriptionController.dispose();
-    _jobTitleFocusNode.dispose();
     _descriptionFocusNode.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    _endDateController.text = "Present";
+
+    if(widget.experience != null) {
+      _jobTitleController.text = widget.experience!.jobTitle;
+      _companyController.text = widget.experience!.company;
+      _descriptionController.text = widget.experience!.description;
+      _startDateController.text = widget.experience!.startDate;
+      _endDateController.text = widget.experience!.endDate;
+
+      if(widget.experience!.endDate == "Present") {
+        _experienceToPresent = true;
+      } else {
+        _experienceToPresent = false;
+      }
+    } else {
+      _endDateController.text = "Present";
+    }
+
     super.initState();
   }
 
@@ -112,19 +131,6 @@ class _ExperienceFormState extends State<ExperienceForm> {
                 ),
                 const SizedBox(height: 25,),
                 TextInput(
-                  controller: _companyController,
-                  textInputType: TextInputType.text,
-                  inputAction: TextInputAction.next,
-                  enabled: true,
-                  label: "Company",
-                  placeholder: "ex. XYZ Limited",
-                  error: _companyError,
-                  onFieldSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(_jobTitleFocusNode);
-                  },
-                ),
-                const SizedBox(height: 15,),
-                TextInput(
                   controller: _jobTitleController,
                   textInputType: TextInputType.text,
                   inputAction: TextInputAction.next,
@@ -132,10 +138,19 @@ class _ExperienceFormState extends State<ExperienceForm> {
                   label: "Job Title",
                   placeholder: "ex. Software Engineer",
                   error: _jobTitleError,
-                  focusNode: _jobTitleFocusNode,
                   onFieldSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(_jobTitleFocusNode);
+                    FocusScope.of(context).requestFocus(_companyFocusNode);
                   },
+                ),
+                const SizedBox(height: 15,),
+                TextInput(
+                  controller: _companyController,
+                  textInputType: TextInputType.text,
+                  inputAction: TextInputAction.next,
+                  enabled: true,
+                  label: "Company",
+                  placeholder: "ex. XYZ Limited",
+                  error: _companyError,
                 ),
                 const SizedBox(height: 15,),
                 DateInput(

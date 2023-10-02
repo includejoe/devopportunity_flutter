@@ -18,7 +18,7 @@ class RoundButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onClick,
       child: Container(
         height: 35,
         width: 35,

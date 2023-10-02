@@ -18,6 +18,7 @@ class ExperienceViewModel {
       QuerySnapshot snapshot = await _firestore
           .collection("experiences")
           .where("userId", isEqualTo: currentUser.uid)
+          .orderBy("timestamp", descending: true)
           .get();
 
       experiences = snapshot.docs.map((e) => ExperienceModel.fromSnap(e)).toList();
@@ -31,6 +32,7 @@ class ExperienceViewModel {
 
   // Add Experience
   Future<bool> addExperience({
+    String? id,
     required String company,
     required String jobTitle,
     required String description,
@@ -42,53 +44,25 @@ class ExperienceViewModel {
 
     try {
       CollectionReference experiences = _firestore.collection("experiences");
+      final newId = uuid.v4();
 
-      await experiences.add({
-        "id": uuid.v4(),
+      // if id is not null, then we are updating the document
+      await experiences.doc(id ?? newId).set({
+        "id": id ?? newId,
         "userId": currentUser.uid,
         "company": company,
         "jobTitle": jobTitle,
         "description": description,
         "startDate": startDate,
-        "endDate": endDate
-      });
+        "endDate": endDate,
+        "timestamp": FieldValue.serverTimestamp()
+      }, SetOptions(merge: true));
 
       successful = true;
     } catch(error) {
       successful = false;
     }
 
-    return successful;
-  }
-
-  // Update Experience
-  Future<bool> updateExperience({
-    required String id,
-    required String company,
-    required String jobTitle,
-    required String description,
-    required String startDate,
-    required String endDate,
-  }) async {
-    bool successful = false;
-    User currentUser = _auth.currentUser!;
-
-    try {
-      ExperienceModel experience = ExperienceModel(
-        id: id,
-        userId: currentUser.uid,
-        company: company,
-        jobTitle: jobTitle,
-        description: description,
-        startDate: startDate,
-        endDate: endDate
-      );
-
-      await _firestore.collection("users").doc(id).set(experience.toJson());
-      successful = true;
-    } catch(error) {
-      successful = false;
-    }
     return successful;
   }
 

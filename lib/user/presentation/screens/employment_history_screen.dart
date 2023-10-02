@@ -59,6 +59,7 @@ class _EmploymentHistoryScreenState extends State<EmploymentHistoryScreen> {
 
     final experienceCards = _experiences.map((experience) => ExperienceCard(
       experience: experience!,
+      getUserExperiences: getExperiences
     )).toList();
 
     return Scaffold(

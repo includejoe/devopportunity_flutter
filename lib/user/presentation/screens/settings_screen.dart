@@ -59,18 +59,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         text: "Sign Out",
         onTap: () {
           confirmationDialog(
-              context: context,
-              title: "Are you sure you want to sign out?",
-              yesAction: () {
-                _userViewModel.signOut();
-                _userProvider.clearUser();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()
-                    )
-                );
-              }
+            context: context,
+            title: "Are you sure you want to sign out?",
+            yesAction: () {
+              _userViewModel.signOut();
+              _userProvider.clearUser();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const LoginScreen()
+                )
+              );
+            }
           );
         },
       )

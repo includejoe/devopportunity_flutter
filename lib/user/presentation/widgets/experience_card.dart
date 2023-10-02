@@ -1,11 +1,19 @@
+import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/widgets/buttons/round_button.dart';
+import 'package:dev_opportunity/base/presentation/widgets/dialogs/confirmation_dialog.dart';
+import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
 import 'package:dev_opportunity/user/domain/models/experience.dart';
+import 'package:dev_opportunity/user/presentation/view_models/experience_view_model.dart';
+import 'package:dev_opportunity/user/presentation/widgets/experience_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ExperienceCard extends StatelessWidget {
-  const ExperienceCard({super.key, required this.experience});
+  ExperienceCard({super.key, required this.experience, required this.getUserExperiences});
   final ExperienceModel experience;
+  final void Function() getUserExperiences;
+  final _viewModel = getIt<ExperienceViewModel>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,14 +88,32 @@ class ExperienceCard extends StatelessWidget {
                         children: [
                           RoundButton(
                             icon: CupertinoIcons.pen,
-                            onClick: (){},
-                            backgroundColor: Colors.green
+                            backgroundColor: Colors.green,
+                            onClick: (){
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => ExperienceForm(
+                                  experience: experience,
+                                  getUserExperiences: getUserExperiences
+                                )
+                              );
+                            },
                           ),
                           const SizedBox(width: 5,),
                           RoundButton(
-                              icon: CupertinoIcons.trash,
-                              onClick: (){},
-                              backgroundColor: theme.colorScheme.error
+                            icon: CupertinoIcons.trash,
+                            backgroundColor: theme.colorScheme.error,
+                            onClick: (){
+                              confirmationDialog(
+                                context: context,
+                                title: "Are you sure you delete this?",
+                                yesAction: () {
+                                  _viewModel.deleteExperience(id: experience.id);
+                                  showSnackBar(context, "Experience deleted successfully", Colors.green);
+                                  getUserExperiences();
+                                }
+                              );
+                            },
                           )
                         ],
                       )
