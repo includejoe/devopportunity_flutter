@@ -2,6 +2,7 @@ import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/screens/main_screen.dart';
 import 'package:dev_opportunity/base/presentation/theme/theme_constants.dart';
 import 'package:dev_opportunity/base/presentation/theme/theme_provider.dart';
+import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/user/presentation/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

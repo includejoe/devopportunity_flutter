@@ -4,6 +4,7 @@ import 'package:dev_opportunity/base/presentation/widgets/buttons/main_button.da
 import 'package:dev_opportunity/base/presentation/widgets/inputs/text_input.dart';
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
+import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/base/utils/input_validators/text.dart';
 import 'package:dev_opportunity/base/utils/pick_image.dart';
 import 'package:dev_opportunity/user/domain/models/user.dart';
@@ -21,9 +22,10 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _userViewModel = getIt<UserViewModel>();
+  final _userProvider = getIt<UserProvider>();
+
   UserModel? _user;
-  bool _isPageLoading = false;
-  bool _isSaving = false;
+  bool _isLoading = false;
   Uint8List? _profileImage;
 
   // controllers
@@ -47,18 +49,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  void initialize() async {
-    setState(() {_isPageLoading = true;});
-    _user = await _userViewModel.getUserDetails();
-    _emailController.text = _user?.email ?? "";
-    _nameController.text = _user?.name ?? "";
-    _headlineController.text = _user?.headline ?? "";
-    _bioController.text = _user?.bio ?? "";
-    setState(() {_isPageLoading = false;});
-  }
 
   void updateProfile(context) async {
-    setState(() {_isSaving = true;});
+    setState(() {_isLoading = true;});
     bool successful = await _userViewModel.updateUser(
       name: _nameController.text,
       headline: _headlineController.text,
@@ -69,21 +62,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (successful) {
       UserModel? updatedUser = await _userViewModel.getUserDetails();
-        setState(() {
-          _user = updatedUser;
-        });
+        setState(() {_user = updatedUser;});
+        _userProvider.user = updatedUser;
       showSnackBar(context, "Profile updated successfully", Colors.green);
     } else {
       showSnackBar(context, "Something went wrong", Colors.redAccent);
     }
 
-    setState(() {_isSaving = false;});
+    setState(() {_isLoading = false;});
   }
 
   @override
   void initState() {
     super.initState();
-    initialize();
+    _userProvider.init();
+    _user = _userProvider.user;
+    _emailController.text = _user?.email ?? "";
+    _nameController.text = _user?.name ?? "";
+    _headlineController.text = _user?.headline ?? "";
+    _bioController.text = _user?.bio ?? "";
   }
 
   @override
@@ -103,9 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         ),
-        body: _isPageLoading ? const Center(
-          child: Loader(size: 24),
-        ) : SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
@@ -204,7 +199,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     },
                   ),
                   const SizedBox(height: 25,),
-                  _isSaving ? const Loader(size: 24) : Button(
+                  _isLoading ? const Loader(size: 24) : Button(
                       onTap: () {
                         setState(() {
                           _nameError = nameValidator(_nameController.text);

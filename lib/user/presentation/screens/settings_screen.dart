@@ -1,6 +1,7 @@
 import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/widgets/dialogs/confirmation_dialog.dart';
 import 'package:dev_opportunity/base/presentation/widgets/list_item.dart';
+import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/user/presentation/screens/edit_profile_screen.dart';
 import 'package:dev_opportunity/user/presentation/screens/employment_history_screen.dart';
 import 'package:dev_opportunity/user/presentation/screens/login_screen.dart';
@@ -18,6 +19,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final _userViewModel = getIt<UserViewModel>();
+  final _userProvider = getIt<UserProvider>();
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: "Are you sure you want to sign out?",
               yesAction: () {
                 _userViewModel.signOut();
+                _userProvider.clearUser();
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

@@ -3,6 +3,7 @@ import 'package:dev_opportunity/base/presentation/screens/main_screen.dart';
 import 'package:dev_opportunity/base/presentation/widgets/buttons/main_button.dart';
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
+import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/base/utils/input_validators/email.dart';
 import 'package:dev_opportunity/base/utils/input_validators/password.dart';
 import 'package:dev_opportunity/user/presentation/screens/register_screen.dart';
@@ -23,6 +24,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final  _viewModel = getIt<UserViewModel>();
+  final _userProvider = getIt<UserProvider>();
   bool _isLoading = false;
 
   // controllers
@@ -50,6 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if(successful) {
       _emailController.clear();
       _passwordController.clear();
+      final user = await _viewModel.getUserDetails();
+      _userProvider.user = user;
 
       Navigator.pushReplacement(
           context,
