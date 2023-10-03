@@ -51,11 +51,19 @@ class _JobsScreenState extends State<JobsScreen> {
     }
   }
 
+  void getCurrentUser () {
+    _userProvider.init();
+    setState(() {
+      _user = _userProvider.user;
+      _isLoading = true;
+      _isError = false;
+    });
+  }
+
   @override
   void initState() {
     getJobs();
-    _userProvider.init();
-    _user = _userProvider.user;
+    getCurrentUser();
     super.initState();
   }
 
