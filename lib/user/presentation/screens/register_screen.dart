@@ -24,6 +24,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final  _viewModel = getIt<UserViewModel>();
   bool _isLoading = false;
+  bool _isCompany = false;
 
   // controllers
   final _emailController = TextEditingController();
@@ -53,6 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       password: _passwordController.text,
       name: _nameController.text,
       headline: _headlineController.text,
+      isCompany: _isCompany
     );
 
     setState(() { _isLoading = false; });
@@ -174,6 +176,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_passwordFocusNode);
                     },
+                  ),
+                  const SizedBox(height: 15,),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Signing up as a company?", style: theme.textTheme.bodyMedium),
+                      const SizedBox(width: 5,),
+                      Switch(
+                          activeColor: theme.colorScheme.primary,
+                          activeTrackColor: theme.colorScheme.primary.withOpacity(0.4),
+                          value: _isCompany,
+                          onChanged: (value) {
+                            setState(() {
+                              _isCompany = value;
+                            });
+                          }
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 15,),
                   PasswordInput(

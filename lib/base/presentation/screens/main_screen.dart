@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/job/presentation/screens/jobs_screen.dart';
-import 'package:dev_opportunity/job/presentation/screens/post_job_screen.dart';
 import 'package:dev_opportunity/user/domain/models/user.dart';
 import 'package:dev_opportunity/user/presentation/screens/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,7 +42,6 @@ class _MainScreenState extends State<MainScreen> {
           },
         children:  <Widget> [
           const JobsScreen(),
-          const PostJobScreen(),
           ProfileScreen(user: _user!, myProfile: true,),
         ]
       ),
@@ -70,13 +68,6 @@ class _MainScreenState extends State<MainScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(_currentScreen == 1 ?
-              CupertinoIcons.add_circled_solid :
-              CupertinoIcons.add_circled
-              ),
-              label: 'Post Job'
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(_currentScreen == 2 ?
               CupertinoIcons.person_fill :
               CupertinoIcons.person
               ),

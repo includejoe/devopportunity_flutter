@@ -25,6 +25,7 @@ class UserViewModel {
     required String password,
     required String name,
     required String headline,
+    required bool isCompany,
   }) async {
     bool successful = false;
 
@@ -34,14 +35,13 @@ class UserViewModel {
           password: password
       );
 
-      UserModel user = UserModel(
-          email: email,
-          uid: credentials.user!.uid,
-          name: name,
-          headline: headline
-      );
-
-      await _firestore.collection("users").doc(credentials.user!.uid).set(user.toJson());
+      await _firestore.collection("users").doc(credentials.user!.uid).set({
+        "uid": credentials.user!.uid,
+        "email": email,
+        "name": name,
+        "headline": headline,
+        "isCompany": isCompany,
+      });
 
       successful = true;
     } catch(error) {
@@ -83,18 +83,14 @@ class UserViewModel {
       imageUrl = await StorageMethods().uploadImageToStorage("profile_pics", profileImage, false);
     }
 
-    UserModel user = UserModel(
-      email: _auth.currentUser!.email!,
-      uid: _auth.currentUser!.uid,
-      name: name,
-      headline: headline,
-      bio: bio,
-      skills: skills,
-      profilePic: imageUrl
-    );
-
     try {
-      await _firestore.collection("users").doc(_auth.currentUser!.uid).set(user.toJson());
+      await _firestore.collection("users").doc(_auth.currentUser!.uid).set({
+        "name": name,
+        "headline": headline,
+        "bio": bio,
+        "skills": skills,
+        "profilePic": imageUrl
+      });
       successful = true;
     } catch(error) {
       successful = false;

@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: !widget.myProfile,
         backgroundColor: theme.colorScheme.primary,
         actions: widget.myProfile ? [
           IconButton(

@@ -3,23 +3,29 @@ import 'package:dev_opportunity/user/domain/models/user.dart';
 
 class JobModel {
   final String id;
-  final UserModel user;
+  final String userId;
+  final String companyName;
   final String jobTitle;
   final String description;
   final String skillsRequired;
-  final String onSiteRemote;
+  final String location;
+  final String type;
   final String datePosted;
   final String experienceLevel;
+  final bool opened;
 
   const JobModel({
     required this.id,
-    required this.user,
+    required this.userId,
+    required this.companyName,
     required this.jobTitle,
     required this.description,
     required this.skillsRequired,
-    required this.onSiteRemote,
+    required this.location,
+    required this.type,
     required this.datePosted,
     required this.experienceLevel,
+    required this.opened
   });
 
   static JobModel fromSnap(DocumentSnapshot snap) {
@@ -27,13 +33,16 @@ class JobModel {
 
     return JobModel (
       id: snapshot["id"],
-      user: UserModel.fromSnap(snapshot["user"]),
+      userId: snapshot["userId"],
+      companyName: snapshot["companyName"],
       jobTitle: snapshot["jobTitle"],
       description: snapshot["description"],
       skillsRequired: snapshot["skillsRequired"],
-      onSiteRemote: snapshot["onSiteRemote"],
+      location: snapshot["location"],
+      type: snapshot["type"],
       datePosted: snapshot["datePosted"],
       experienceLevel: snapshot["experienceLevel"],
+      opened: snapshot["opened"],
     );
   }
 }
