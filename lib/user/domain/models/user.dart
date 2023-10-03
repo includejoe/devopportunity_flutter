@@ -6,6 +6,7 @@ class UserModel {
   late final String name;
   late final String headline;
   late final String? bio;
+  late final String? skills;
   late final String? profilePic;
 
   UserModel({
@@ -14,6 +15,7 @@ class UserModel {
     required this.name,
     required this.headline,
     this.bio,
+    this.skills,
     this.profilePic,
   });
 
@@ -23,6 +25,7 @@ class UserModel {
     "email": email,
     "profilePic": profilePic,
     "bio": bio,
+    "skills": skills,
     "headline": headline
   };
 
@@ -31,8 +34,9 @@ class UserModel {
     email = json['email'];
     name = json['name'];
     headline = json['headline'];
-    profilePic = json['profilePic'];
     bio = json['bio'];
+    skills = json['skills'];
+    profilePic = json['profilePic'];
   }
 
   static UserModel fromSnap(DocumentSnapshot snap) {
@@ -44,9 +48,8 @@ class UserModel {
       email: snapshot["email"],
       profilePic: snapshot["profilePic"],
       bio: snapshot["bio"],
+      skills: snapshot["skills"],
       headline: snapshot["headline"]
     );
   }
-
-
 }

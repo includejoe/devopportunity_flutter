@@ -32,10 +32,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _headlineController = TextEditingController();
+  final _skillsController = TextEditingController();
   final _bioController = TextEditingController();
 
   // focus nodes
   final _headlineFocusNode = FocusNode();
+  final _skillsFocusNode = FocusNode();
   final _bioFocusNode = FocusNode();
 
   // errors
@@ -56,6 +58,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       name: _nameController.text,
       headline: _headlineController.text,
       bio: _bioController.text,
+      skills: _skillsController.text,
       profileImage: _profileImage,
       imageUrl: _user?.profilePic
     );
@@ -81,6 +84,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nameController.text = _user?.name ?? "";
     _headlineController.text = _user?.headline ?? "";
     _bioController.text = _user?.bio ?? "";
+    _skillsController.text = _user?.skills ?? "";
   }
 
   @override
@@ -180,6 +184,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     enabled: true,
                     label: "Headline",
                     error: _headlineError,
+                    onFieldSubmitted: (_) {
+                      FocusScope.of(context).requestFocus(_bioFocusNode);
+                    },
+                  ),
+                  const SizedBox(height: 15,),
+                  TextInput(
+                    controller: _skillsController,
+                    textInputType: TextInputType.text,
+                    height: 100.0,
+                    maxLines: 5,
+                    focusNode: _skillsFocusNode,
+                    inputAction: TextInputAction.done,
+                    enabled: true,
+                    label: "Skills",
+                    placeholder: "ex. Python, Figma, Flutter",
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_bioFocusNode);
                     },

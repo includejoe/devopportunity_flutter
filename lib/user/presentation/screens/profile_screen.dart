@@ -95,6 +95,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ]
               ),
               SizedBox(height: MediaQuery.of(context).size.width * 0.07,),
+              Text("Skills", style: theme.textTheme.headlineLarge),
+              Text(widget.user.skills ?? "No skills added yet.", style: theme.textTheme.bodyMedium),
+              SizedBox(height: MediaQuery.of(context).size.width * 0.03,),
               Text("Experience", style: theme.textTheme.headlineLarge),
               SizedBox(height: MediaQuery.of(context).size.width * 0.0,),
               _experiences != null ? Column(

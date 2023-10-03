@@ -73,6 +73,7 @@ class UserViewModel {
     required String name,
     required String headline,
     required String bio,
+    required String skills,
     required String? imageUrl,
     Uint8List? profileImage
   }) async {
@@ -88,6 +89,7 @@ class UserViewModel {
       name: name,
       headline: headline,
       bio: bio,
+      skills: skills,
       profilePic: imageUrl
     );
 
