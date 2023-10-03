@@ -32,7 +32,7 @@ class _EmploymentHistoryScreenState extends State<EmploymentHistoryScreen> {
       _isError = false;
     });
 
-    experiences =  await _viewModel.getUserExperiences();
+    experiences =  await _viewModel.getUserExperiences(null); // fetch logged in user experience if userId is null
 
     if(experiences != null) {
       setState(() {
@@ -83,12 +83,12 @@ class _EmploymentHistoryScreenState extends State<EmploymentHistoryScreen> {
             backgroundColor: theme.colorScheme.background,
           ),
           child: _experiences.isNotEmpty ? ListView.builder(
-              scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.all(8),
-              itemCount: experienceCards.length,
-              itemBuilder: (context, index) {
-                return experienceCards[index];
-              }
+            scrollDirection: Axis.vertical,
+            padding: const EdgeInsets.all(8),
+            itemCount: experienceCards.length,
+            itemBuilder: (context, index) {
+              return experienceCards[index];
+            }
           ) : const EmptyListPlaceholder(
             icon: CupertinoIcons.bag_fill,
             message: "You haven't added any experiences yet",

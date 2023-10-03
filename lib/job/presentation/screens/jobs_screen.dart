@@ -17,7 +17,7 @@ class _JobsScreenState extends State<JobsScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: theme.colorScheme.primary,
         title: Text(
-          "Latest Jobs",
+          "Dev Opportunity",
           style: theme.textTheme.headlineMedium?.copyWith(
               color: theme.colorScheme.onPrimary
           ),

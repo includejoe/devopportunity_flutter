@@ -10,18 +10,28 @@ class ExperienceViewModel {
   var uuid = const Uuid();
 
   // Get Experiences
-  Future<List<ExperienceModel?>?> getUserExperiences() async {
+  Future<List<ExperienceModel?>?> getUserExperiences(String? userId) async {
     User currentUser = _auth.currentUser!;
     List<ExperienceModel?>? experiences;
 
     try {
-      QuerySnapshot snapshot = await _firestore
-          .collection("experiences")
-          .where("userId", isEqualTo: currentUser.uid)
-          .orderBy("timestamp", descending: true)
-          .get();
 
-      experiences = snapshot.docs.map((e) => ExperienceModel.fromSnap(e)).toList();
+      if(userId != null) {
+        QuerySnapshot snapshot = await _firestore
+            .collection("experiences")
+            .where("userId", isEqualTo: userId)
+            .orderBy("timestamp", descending: true)
+            .get();
+          experiences = snapshot.docs.map((e) => ExperienceModel.fromSnap(e)).toList();
+      } else {
+        QuerySnapshot snapshot = await _firestore
+            .collection("experiences")
+            .where("userId", isEqualTo: currentUser.uid)
+            .orderBy("timestamp", descending: true)
+            .get();
+        experiences = snapshot.docs.map((e) => ExperienceModel.fromSnap(e)).toList();
+      }
+
     } catch(error) {
       debugPrint(error.toString());
       experiences = null;

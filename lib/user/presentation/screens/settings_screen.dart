@@ -67,7 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const LoginScreen()
+                  builder: (context) => const LoginScreen()
                 )
               );
             }
@@ -78,7 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         backgroundColor: theme.colorScheme.primary,
         title: Text(
           "Settings",

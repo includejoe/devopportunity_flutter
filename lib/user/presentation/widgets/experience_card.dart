@@ -14,7 +14,6 @@ class ExperienceCard extends StatelessWidget {
   final void Function() getUserExperiences;
   final _viewModel = getIt<ExperienceViewModel>();
 
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -119,7 +118,6 @@ class ExperienceCard extends StatelessWidget {
                       )
                     ],
                   ),
-
                 ],
               ),
             )
