@@ -13,6 +13,7 @@ class JobModel {
   final String datePosted;
   final String experienceLevel;
   final bool opened;
+  final List<dynamic> applications;
   final String? userProfilePic;
 
   const JobModel({
@@ -27,7 +28,8 @@ class JobModel {
     required this.datePosted,
     required this.experienceLevel,
     required this.opened,
-    this.userProfilePic
+    required this.applications,
+    this.userProfilePic,
   });
 
   static JobModel fromSnap(DocumentSnapshot snap) {
@@ -45,6 +47,7 @@ class JobModel {
       datePosted: snapshot["datePosted"],
       experienceLevel: snapshot["experienceLevel"],
       opened: snapshot["opened"],
+      applications: snapshot["applications"],
       userProfilePic: snapshot["userProfilePic"]
     );
   }

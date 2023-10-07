@@ -2,6 +2,7 @@ import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/job/domain/models/job.dart';
 import 'package:dev_opportunity/job/presentation/view_models/job_view_model.dart';
+import 'package:dev_opportunity/job/presentation/widgets/jobs_posted_card.dart';
 import 'package:dev_opportunity/user/domain/models/experience.dart';
 import 'package:dev_opportunity/user/domain/models/user.dart';
 import 'package:dev_opportunity/user/presentation/screens/settings_screen.dart';
@@ -127,8 +128,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ..._experiences!.map((e) => ProfileExperienceCard(
-                    experience: e!,
+                  ..._jobs!.map((job) => JobsPostedCard(
+                    job: job!,
                   ))
                 ],
               ) : SizedBox(

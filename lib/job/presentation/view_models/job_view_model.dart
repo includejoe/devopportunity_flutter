@@ -82,6 +82,7 @@ class JobViewModel {
         "experienceLevel": experienceLevel,
         "opened": opened,
         "userProfilePic": userProfilePic,
+        "applications": [],
         "datePosted": DateTime.now().toString(),
         "timestamp": FieldValue.serverTimestamp()
       }, SetOptions(merge: true));
@@ -118,8 +119,44 @@ class JobViewModel {
     return successful;
   }
 
+  // Apply Job
+  Future<String> applyJob({
+    required String jobId,
+    required String userId,
+  }) async {
+    String response = "error";
+
+    try {
+      CollectionReference jobs = _firestore.collection("jobs");
+      DocumentSnapshot jobSnapshot = await jobs.doc(jobId).get();
+      Map<String, dynamic> jobMap = jobSnapshot.data() as Map<String, dynamic>;
+      List<dynamic> applications = (jobMap['applications'] as List<dynamic>) ?? [];
+
+      // If the userId is already in applications
+      if (applications.contains(userId)) {
+        response = "already-applied";
+      } else {
+        // Append userId to the applications array
+        applications.add(userId);
+
+        // Update the document with the updated applications array and timestamp
+        await jobs.doc(jobId).set({
+          "applications": applications,
+          "timestamp": FieldValue.serverTimestamp()
+        }, SetOptions(merge: true));
+
+        response = "success";
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+      response = "error";
+    }
+
+    return response;
+  }
+
   // Delete Job
-  Future<bool> deleteExperience({required String id}) async {
+  Future<bool> deleteJob({required String id}) async {
     bool successful = false;
 
     try {

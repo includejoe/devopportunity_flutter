@@ -72,7 +72,9 @@ class _JobsScreenState extends State<JobsScreen> {
     final theme = Theme.of(context);
 
     final jobCards = _jobs.map((job) => JobCard(
-        job: job!,
+      job: job!,
+      isCompany: _user!.isCompany,
+      userId: _user!.uid,
     )).toList();
 
     return Scaffold(
