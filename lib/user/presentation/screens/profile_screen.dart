@@ -1,4 +1,7 @@
 import 'package:dev_opportunity/base/di/get_it.dart';
+import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
+import 'package:dev_opportunity/job/domain/models/job.dart';
+import 'package:dev_opportunity/job/presentation/view_models/job_view_model.dart';
 import 'package:dev_opportunity/user/domain/models/experience.dart';
 import 'package:dev_opportunity/user/domain/models/user.dart';
 import 'package:dev_opportunity/user/presentation/screens/settings_screen.dart';
@@ -19,17 +22,26 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   List<ExperienceModel?>? _experiences;
-  final _viewModel = getIt<ExperienceViewModel>();
+  List<JobModel?>? _jobs;
+  final _experienceViewModel = getIt<ExperienceViewModel>();
+  final _jobViewModel = getIt<JobViewModel>();
+  bool _isLoading = true;
 
-  void getExperiences() async {
-    List<ExperienceModel?>? experiences = await _viewModel.getUserExperiences(widget.user.uid);
-    setState(() {_experiences = experiences;});
+  void initialize() async {
+    List<ExperienceModel?>? experiences = await _experienceViewModel.getUserExperiences(widget.user.uid);
+    List<JobModel?>? jobs = await _jobViewModel.getUserJobsPosted(widget.user.uid);
+
+    setState(() {
+      _experiences = experiences;
+      _jobs = jobs;
+      _isLoading = false;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    getExperiences();
+    initialize();
   }
   
   @override
@@ -60,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: _isLoading ? const Center(child: Loader(size: 30)) : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
@@ -95,12 +107,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ]
               ),
               SizedBox(height: MediaQuery.of(context).size.width * 0.07,),
-              Text("Skills", style: theme.textTheme.headlineLarge),
-              Text(widget.user.skills ?? "No skills added yet.", style: theme.textTheme.bodyMedium),
+              Text("Bio", style: theme.textTheme.headlineLarge),
+              Text(widget.user.bio ?? "No bio.", style: theme.textTheme.bodyMedium),
+              !widget.user.isCompany ? SizedBox(height: MediaQuery.of(context).size.width * 0.07,) : Container(),
+              !widget.user.isCompany ? Text("Skills", style: theme.textTheme.headlineLarge) : Container(),
+              !widget.user.isCompany ? Text(widget.user.skills ?? "No skills added yet.", style: theme.textTheme.bodyMedium) : Container(),
               SizedBox(height: MediaQuery.of(context).size.width * 0.03,),
-              Text("Experience", style: theme.textTheme.headlineLarge),
+              Text(!widget.user.isCompany ? "Experience" : "Jobs Posted", style: theme.textTheme.headlineLarge),
               SizedBox(height: MediaQuery.of(context).size.width * 0.0,),
-              _experiences != null ? Column(
+              !widget.user.isCompany && _experiences != null ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ..._experiences!.map((e) => ProfileExperienceCard(
+                    experience: e!,
+                  ))
+                ],
+              ) : widget.user.isCompany && _jobs != null ? Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -111,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ) : SizedBox(
                 height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width,
-                child: const Center(child: Text("No Experience"))
+                child: Center(child: Text(widget.user.isCompany ? "No Jobs Posted." : "No Experience."))
               ),
             ],
           )

@@ -17,9 +17,9 @@ class JobViewModel {
 
     try {
       QuerySnapshot snapshot = await _firestore
-          .collection("jobs")
-          .orderBy("timestamp", descending: true)
-          .get();
+        .collection("jobs")
+        .orderBy("timestamp", descending: true)
+        .get();
       jobs = snapshot.docs.map((e) => JobModel.fromSnap(e)).toList();
 
     } catch(error) {
@@ -31,24 +31,22 @@ class JobViewModel {
   }
 
   // Get User Jobs Posted
-  Future<List<ExperienceModel?>?> getUserJobsPosted() async {
-    User currentUser = _auth.currentUser!;
-    List<ExperienceModel?>? experiences;
+  Future<List<JobModel?>?> getUserJobsPosted(String userId) async {
+    List<JobModel?>? jobs;
 
     try {
         QuerySnapshot snapshot = await _firestore
-            .collection("experiences")
-            .where("userId", isEqualTo: currentUser.uid)
-            .orderBy("timestamp", descending: true)
-            .get();
-        experiences = snapshot.docs.map((e) => ExperienceModel.fromSnap(e)).toList();
-
+          .collection("jobs")
+          .where("userId", isEqualTo: userId)
+          .orderBy("timestamp", descending: true)
+          .get();
+        jobs = snapshot.docs.map((e) => JobModel.fromSnap(e)).toList();
     } catch(error) {
       debugPrint(error.toString());
-      experiences = null;
+      jobs = null;
     }
 
-    return experiences;
+    return jobs;
   }
 
   // Add Job
@@ -62,6 +60,7 @@ class JobViewModel {
     required String type,
     required String experienceLevel,
     required bool opened,
+    String? userProfilePic,
   }) async {
     bool successful = false;
     User currentUser = _auth.currentUser!;
@@ -82,6 +81,7 @@ class JobViewModel {
         "type": type,
         "experienceLevel": experienceLevel,
         "opened": opened,
+        "userProfilePic": userProfilePic,
         "datePosted": DateTime.now().toString(),
         "timestamp": FieldValue.serverTimestamp()
       }, SetOptions(merge: true));

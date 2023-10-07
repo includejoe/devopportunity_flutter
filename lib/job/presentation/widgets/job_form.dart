@@ -65,7 +65,8 @@ class _JobFormState extends State<JobForm> {
       location: _locationController.text,
       type: _typeController.text,
       experienceLevel: _experienceLevelController.text,
-      opened: true
+      opened: true,
+      userProfilePic: _user!.profilePic
     );
 
     if(successful) {

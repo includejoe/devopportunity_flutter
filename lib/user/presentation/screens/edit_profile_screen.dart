@@ -189,11 +189,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     },
                   ),
                   const SizedBox(height: 15,),
-                  TextInput(
+                  !_user!.isCompany ? TextInput(
                     controller: _skillsController,
                     textInputType: TextInputType.text,
-                    height: 100.0,
-                    maxLines: 5,
                     focusNode: _skillsFocusNode,
                     inputAction: TextInputAction.done,
                     enabled: true,
@@ -202,7 +200,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_bioFocusNode);
                     },
-                  ),
+                  ) : Container(),
                   const SizedBox(height: 15,),
                   TextInput(
                     controller: _bioController,
