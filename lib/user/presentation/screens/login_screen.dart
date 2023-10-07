@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if(successful) {
       _emailController.clear();
       _passwordController.clear();
-      final user = await _viewModel.getUserDetails();
+      final user = await _viewModel.getUserDetails(null);
       _userProvider.user = user;
 
       Navigator.pushReplacement(
@@ -141,26 +141,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(height: 5,),
-                  Container(
-                    padding: const EdgeInsets.only(right: 5),
-                    width: MediaQuery.of(context).size.width,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const Placeholder())
-                        );
-                      },
-                      child: Text(
-                        "Forgot Password?",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            color: theme.colorScheme.primary
-                        ),
-                        textAlign: TextAlign.end,
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.only(right: 5),
+                  //   width: MediaQuery.of(context).size.width,
+                  //   child: InkWell(
+                  //     onTap: () {
+                  //       Navigator.of(context).push(
+                  //           MaterialPageRoute(builder: (context) => const Placeholder())
+                  //       );
+                  //     },
+                  //     child: Text(
+                  //       "Forgot Password?",
+                  //       style: theme.textTheme.bodyMedium?.copyWith(
+                  //           fontWeight: FontWeight.bold,
+                  //           decoration: TextDecoration.underline,
+                  //           color: theme.colorScheme.primary
+                  //       ),
+                  //       textAlign: TextAlign.end,
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 15,),
                   _isLoading ? const Loader(size: 24) : Button(
                     text: "LOGIN",

@@ -135,7 +135,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ) : SizedBox(
                 height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width,
-                child: Center(child: Text(widget.user.isCompany ? "No Jobs Posted." : "No Experience."))
+                child: Center(child: Text(
+                  widget.user.isCompany && _jobs == null ? "No Jobs Posted." :
+                  !widget.user.isCompany && _experiences == null ? "No Experience." : "")
+                )
               ),
             ],
           )

@@ -44,7 +44,7 @@ class JobsPostedCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  timeago.format(DateFormat('yyyy-MM-dd').parse(job.datePosted)),
+                  timeago.format(DateFormat('yyyy-MM-dd HH:mm:ss.SSS').parse(job.datePosted)),
                   style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onBackground.withOpacity(0.5)
                   ),

@@ -64,7 +64,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
 
     if (successful) {
-      UserModel? updatedUser = await _userViewModel.getUserDetails();
+      UserModel? updatedUser = await _userViewModel.getUserDetails(null);
         setState(() {_user = updatedUser;});
         _userProvider.user = updatedUser;
       showSnackBar(context, "Profile updated successfully", Colors.green);

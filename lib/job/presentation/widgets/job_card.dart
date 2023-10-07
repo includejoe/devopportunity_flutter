@@ -4,6 +4,9 @@ import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
 import 'package:dev_opportunity/job/domain/models/job.dart';
 import 'package:dev_opportunity/job/presentation/view_models/job_view_model.dart';
+import 'package:dev_opportunity/user/domain/models/user.dart';
+import 'package:dev_opportunity/user/presentation/screens/profile_screen.dart';
+import 'package:dev_opportunity/user/presentation/view_models/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -25,13 +28,14 @@ class JobCard extends StatefulWidget {
 }
 
 class _JobCardState extends State<JobCard> {
-  final _viewModel = getIt<JobViewModel>();
+  final _jobViewModel = getIt<JobViewModel>();
+  final _userViewModel = getIt<UserViewModel>();
   bool _isLoading = false;
 
   void applyJob(context) async {
     setState(() {_isLoading = true;});
 
-     String response = await _viewModel.applyJob(
+     String response = await _jobViewModel.applyJob(
        jobId: widget.job.id,
        userId: widget.userId
      );
@@ -44,6 +48,16 @@ class _JobCardState extends State<JobCard> {
        showSnackBar(context, "Something went wrong", Colors.red);
      }
     setState(() {_isLoading = false;});
+  }
+
+  void navigateToProfileScreen(context) async {
+    UserModel? user = await _userViewModel.getUserDetails(widget.job.userId);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProfileScreen(user: user!, myProfile: false,)
+      )
+    );
   }
 
   @override
@@ -82,9 +96,7 @@ class _JobCardState extends State<JobCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                      onTap: () {
-
-                      },
+                      onTap: () {navigateToProfileScreen(context);},
                       child: Row(
                         children: [
                           widget.job.userProfilePic != null && widget.job.userProfilePic != "" ? CircleAvatar(
@@ -96,6 +108,7 @@ class _JobCardState extends State<JobCard> {
                           ),
                           const SizedBox(width: 10,),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 widget.job.companyName,
@@ -106,7 +119,7 @@ class _JobCardState extends State<JobCard> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                timeago.format(DateFormat('yyyy-MM-dd').parse(widget.job.datePosted)),
+                                timeago.format(DateFormat('yyyy-MM-dd HH:mm:ss.SSS').parse(widget.job.datePosted)),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.onBackground.withOpacity(0.5)
                                 ),

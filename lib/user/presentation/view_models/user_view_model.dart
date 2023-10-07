@@ -9,11 +9,11 @@ class UserViewModel {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Get User Details
-  Future<UserModel?> getUserDetails() async {
+  Future<UserModel?> getUserDetails(String? userId) async {
     User currentUser = _auth.currentUser!;
     DocumentSnapshot snapshot = await _firestore
         .collection("users")
-        .doc(currentUser.uid)
+        .doc(userId ?? currentUser.uid)
         .get();
 
     return UserModel.fromSnap(snapshot);
