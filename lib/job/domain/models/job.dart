@@ -13,7 +13,7 @@ class JobModel {
   final String datePosted;
   final String experienceLevel;
   final bool opened;
-  final String userProfilePic;
+  final String? userProfilePic;
 
   const JobModel({
     required this.id,
@@ -27,7 +27,7 @@ class JobModel {
     required this.datePosted,
     required this.experienceLevel,
     required this.opened,
-    required this.userProfilePic
+    this.userProfilePic
   });
 
   static JobModel fromSnap(DocumentSnapshot snap) {

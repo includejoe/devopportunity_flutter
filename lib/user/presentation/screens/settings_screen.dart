@@ -51,18 +51,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       ListItem(
         icon: CupertinoIcons.bag_fill,
-        text: "Jobs Posted",
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const Placeholder()
-              )
-          );
-        },
-      ),
-      ListItem(
-        icon: CupertinoIcons.bag_fill,
         text: "Jobs Applied",
         onTap: () {
           Navigator.push(
