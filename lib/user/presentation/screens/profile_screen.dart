@@ -130,6 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   ..._jobs!.map((job) => JobsPostedCard(
                     job: job!,
+                    user: widget.user,
                   ))
                 ],
               ) : SizedBox(

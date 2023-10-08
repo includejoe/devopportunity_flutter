@@ -30,23 +30,49 @@ class JobViewModel {
     return jobs;
   }
 
+  // Get Job Applicants
+  Future<List<UserModel?>?> getJobApplicants(String jobId) async {
+    List<UserModel?>? applicants;
+
+    try {
+      CollectionReference jobs = _firestore.collection("jobs");
+      DocumentSnapshot jobSnapshot = await jobs.doc(jobId).get();
+      Map<String, dynamic> jobMap = jobSnapshot.data() as Map<String, dynamic>;
+      List<String> applications = List<String>.from(jobMap['applications'] ?? []);
+
+      List<UserModel?> applicants = await Future.wait(
+        applications.map((applicantId) async {
+          DocumentSnapshot userSnapshot =
+          await _firestore.collection("users").doc(applicantId).get();
+          if (userSnapshot.exists) {
+            return UserModel.fromSnap(userSnapshot);
+          } else {
+            return null;
+          }
+        }),
+      );
+
+      return applicants;
+    } catch(error) {
+      debugPrint(error.toString());
+      return null;
+    }
+  }
+
   // Get User Jobs Posted
   Future<List<JobModel?>?> getUserJobsPosted(String userId) async {
-    List<JobModel?>? jobs;
-
     try {
         QuerySnapshot snapshot = await _firestore
           .collection("jobs")
           .where("userId", isEqualTo: userId)
           .orderBy("timestamp", descending: true)
           .get();
-        jobs = snapshot.docs.map((e) => JobModel.fromSnap(e)).toList();
+        List<JobModel?>? jobs = snapshot.docs.map((e) => JobModel.fromSnap(e)).toList();
+        return jobs;
     } catch(error) {
       debugPrint(error.toString());
-      jobs = null;
+      return null;
     }
-
-    return jobs;
   }
 
   // Add Job

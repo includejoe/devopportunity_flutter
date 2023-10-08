@@ -2,6 +2,7 @@ import 'package:dev_opportunity/base/di/get_it.dart';
 import 'package:dev_opportunity/base/presentation/widgets/dialogs/confirmation_dialog.dart';
 import 'package:dev_opportunity/base/presentation/widgets/list_item.dart';
 import 'package:dev_opportunity/base/providers/user_provider.dart';
+import 'package:dev_opportunity/user/domain/models/user.dart';
 import 'package:dev_opportunity/user/presentation/screens/edit_profile_screen.dart';
 import 'package:dev_opportunity/user/presentation/screens/employment_history_screen.dart';
 import 'package:dev_opportunity/user/presentation/screens/login_screen.dart';
@@ -20,6 +21,14 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final _userViewModel = getIt<UserViewModel>();
   final _userProvider = getIt<UserProvider>();
+  UserModel? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _userProvider.init();
+    _user = _userProvider.user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           );
         },
       ),
-      ListItem(
+      !_user!.isCompany ? ListItem(
         icon: CupertinoIcons.doc_append,
         text: "Employment History",
         onTap: () {
@@ -48,19 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               )
           );
         },
-      ),
-      ListItem(
-        icon: CupertinoIcons.bag_fill,
-        text: "Jobs Applied",
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const Placeholder()
-              )
-          );
-        },
-      ),
+      ) : Container(),
       const ListItem(
         icon: CupertinoIcons.sun_max_fill,
         text: "Dark Theme",

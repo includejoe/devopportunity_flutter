@@ -23,7 +23,6 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _userViewModel = getIt<UserViewModel>();
   final _userProvider = getIt<UserProvider>();
-
   UserModel? _user;
   bool _isLoading = false;
   Uint8List? _profileImage;
