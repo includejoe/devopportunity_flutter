@@ -3,7 +3,6 @@ import 'package:dev_opportunity/base/presentation/widgets/buttons/floating_actio
 import 'package:dev_opportunity/base/presentation/widgets/empty_list_placeholder.dart';
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/base/presentation/widgets/page_refresher.dart';
-import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/job/domain/models/job.dart';
 import 'package:dev_opportunity/job/presentation/view_models/job_view_model.dart';
 import 'package:dev_opportunity/job/presentation/widgets/job_card.dart';
@@ -14,7 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class JobsScreen extends StatefulWidget {
-  const JobsScreen({super.key});
+  const JobsScreen({super.key, required this.user});
+
+  final UserModel user;
 
   @override
   State<JobsScreen> createState() => _JobsScreenState();
@@ -22,9 +23,7 @@ class JobsScreen extends StatefulWidget {
 
 class _JobsScreenState extends State<JobsScreen> {
   final _viewModel = getIt<JobViewModel>();
-  final _userProvider = getIt<UserProvider>();
   final _refreshController = RefreshController(initialRefresh: false);
-  UserModel? _user;
   bool _isLoading = false;
   bool _isError = false;
   List<JobModel?> _jobs = [];
@@ -51,19 +50,10 @@ class _JobsScreenState extends State<JobsScreen> {
     }
   }
 
-  void getCurrentUser () {
-    _userProvider.init();
-    setState(() {
-      _user = _userProvider.user;
-      _isLoading = true;
-      _isError = false;
-    });
-  }
 
   @override
   void initState() {
     getJobs();
-    getCurrentUser();
     super.initState();
   }
 
@@ -73,8 +63,8 @@ class _JobsScreenState extends State<JobsScreen> {
 
     final jobCards = _jobs.map((job) => JobCard(
       job: job!,
-      isCompany: _user!.isCompany,
-      userId: _user!.uid,
+      isCompany: widget.user.isCompany,
+      userId: widget.user.uid,
     )).toList();
 
     return Scaffold(
@@ -109,7 +99,7 @@ class _JobsScreenState extends State<JobsScreen> {
           message: "No jobs has been posted yet.",
         ),
       ),
-      floatingActionButton: _user!.isCompany ? FloatActionButton(
+      floatingActionButton: widget.user.isCompany ? FloatActionButton(
         onPressed: () {
           showDialog(
             context: context,

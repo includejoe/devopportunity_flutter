@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dev_opportunity/base/di/get_it.dart';
+import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/base/utils/storage_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dev_opportunity/user/domain/models/user.dart';
@@ -7,14 +9,15 @@ import 'package:dev_opportunity/user/domain/models/user.dart';
 class UserViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _userProvider = getIt<UserProvider>();
 
   // Get User Details
   Future<UserModel?> getUserDetails(String? userId) async {
     User currentUser = _auth.currentUser!;
     DocumentSnapshot snapshot = await _firestore
-        .collection("users")
-        .doc(userId ?? currentUser.uid)
-        .get();
+      .collection("users")
+      .doc(userId ?? currentUser.uid)
+      .get();
 
     return UserModel.fromSnap(snapshot);
   }
@@ -59,7 +62,10 @@ class UserViewModel {
     bool successful = false;
 
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential credentials = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      getUserDetails(credentials.user!.uid).then((details) {
+        _userProvider.user = details;
+      });
       successful = true;
     } catch (error) {
       successful = false;
@@ -90,7 +96,7 @@ class UserViewModel {
         "bio": bio,
         "skills": skills,
         "profilePic": imageUrl
-      });
+      }, SetOptions(merge: true));
       successful = true;
     } catch(error) {
       successful = false;

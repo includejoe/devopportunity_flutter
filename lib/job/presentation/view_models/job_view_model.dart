@@ -32,8 +32,6 @@ class JobViewModel {
 
   // Get Job Applicants
   Future<List<UserModel?>?> getJobApplicants(String jobId) async {
-    List<UserModel?>? applicants;
-
     try {
       CollectionReference jobs = _firestore.collection("jobs");
       DocumentSnapshot jobSnapshot = await jobs.doc(jobId).get();
@@ -168,7 +166,6 @@ class JobViewModel {
         // Update the document with the updated applications array and timestamp
         await jobs.doc(jobId).set({
           "applications": applications,
-          "timestamp": FieldValue.serverTimestamp()
         }, SetOptions(merge: true));
 
         response = "success";

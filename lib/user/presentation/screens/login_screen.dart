@@ -3,7 +3,6 @@ import 'package:dev_opportunity/base/presentation/screens/main_screen.dart';
 import 'package:dev_opportunity/base/presentation/widgets/buttons/main_button.dart';
 import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/base/presentation/widgets/snackbar.dart';
-import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/base/utils/input_validators/email.dart';
 import 'package:dev_opportunity/base/utils/input_validators/password.dart';
 import 'package:dev_opportunity/user/presentation/screens/register_screen.dart';
@@ -24,7 +23,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final  _viewModel = getIt<UserViewModel>();
-  final _userProvider = getIt<UserProvider>();
   bool _isLoading = false;
 
   // controllers
@@ -47,23 +45,21 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _passwordController.text,
     );
 
-    setState(() { _isLoading = false; });
 
     if(successful) {
       _emailController.clear();
       _passwordController.clear();
-      final user = await _viewModel.getUserDetails(null);
-      _userProvider.user = user;
 
+      setState(() { _isLoading = false; });
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainScreen())
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen())
       );
     } else {
       showSnackBar(
-          context,
-          "Invalid credentials",
-          Colors.redAccent
+        context,
+        "Invalid credentials",
+        Colors.redAccent
       );
     }
   }
@@ -140,28 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       FocusScope.of(context).unfocus();
                     },
                   ),
-                  const SizedBox(height: 5,),
-                  // Container(
-                  //   padding: const EdgeInsets.only(right: 5),
-                  //   width: MediaQuery.of(context).size.width,
-                  //   child: InkWell(
-                  //     onTap: () {
-                  //       Navigator.of(context).push(
-                  //           MaterialPageRoute(builder: (context) => const Placeholder())
-                  //       );
-                  //     },
-                  //     child: Text(
-                  //       "Forgot Password?",
-                  //       style: theme.textTheme.bodyMedium?.copyWith(
-                  //           fontWeight: FontWeight.bold,
-                  //           decoration: TextDecoration.underline,
-                  //           color: theme.colorScheme.primary
-                  //       ),
-                  //       textAlign: TextAlign.end,
-                  //     ),
-                  //   ),
-                  // ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(height: 20,),
                   _isLoading ? const Loader(size: 24) : Button(
                     text: "LOGIN",
                     onTap: () {

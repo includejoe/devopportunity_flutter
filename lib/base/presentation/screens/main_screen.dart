@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:dev_opportunity/base/di/get_it.dart';
+import 'package:dev_opportunity/base/presentation/widgets/loader.dart';
 import 'package:dev_opportunity/base/providers/user_provider.dart';
 import 'package:dev_opportunity/job/presentation/screens/jobs_screen.dart';
-import 'package:dev_opportunity/user/domain/models/user.dart';
 import 'package:dev_opportunity/user/presentation/screens/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,65 +17,61 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentScreen = 0;
   final PageController _pageController = PageController(initialPage: 0);
-  final _userProvider = getIt<UserProvider>();
-  UserModel? _user;
-
-  @override
-  void initState() {
-    _userProvider.init();
-    _user = _userProvider.user;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-          physics: const BouncingScrollPhysics(),
-          onPageChanged: (int index) {
-            setState(() {
-              _currentScreen = index;
-            });
-          },
-        children:  <Widget> [
-          const JobsScreen(),
-          ProfileScreen(user: _user!, myProfile: true,),
-        ]
-      ),
-    bottomNavigationBar: SizedBox(
-      height: Platform.isIOS ? 90 : 60,
-        child: BottomNavigationBar(
-          currentIndex: _currentScreen,
-          selectedItemColor: theme.colorScheme.primary,
-          unselectedItemColor: Colors.white,
-          backgroundColor: Colors.black,
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          onTap: (int index) {
-            _pageController.jumpToPage(index);
-          },
-          items:  <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(_currentScreen == 0 ?
-              CupertinoIcons.bag_fill :
-              CupertinoIcons.bag
-              ),
-              label: 'Jobs'
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, child) {
+        final user = userProvider.user;
+        return Scaffold(
+          body: user == null ? const Center(child: Loader(size: 24)) : PageView(
+              controller: _pageController,
+              physics: const BouncingScrollPhysics(),
+              onPageChanged: (int index) {
+                setState(() {
+                  _currentScreen = index;
+                });
+              },
+              children:  <Widget> [
+                JobsScreen(user: user),
+                ProfileScreen(user: user, myProfile: true,),
+              ]
+          ),
+          bottomNavigationBar: SizedBox(
+            height: Platform.isIOS ? 90 : 60,
+            child: BottomNavigationBar(
+              currentIndex: _currentScreen,
+              selectedItemColor: theme.colorScheme.primary,
+              unselectedItemColor: Colors.white,
+              backgroundColor: Colors.black,
+              type: BottomNavigationBarType.fixed,
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              onTap: (int index) {
+                _pageController.jumpToPage(index);
+              },
+              items:  <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                    icon: Icon(_currentScreen == 0 ?
+                    CupertinoIcons.bag_fill :
+                    CupertinoIcons.bag
+                    ),
+                    label: 'Jobs'
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(_currentScreen == 1 ?
+                    CupertinoIcons.person_fill :
+                    CupertinoIcons.person
+                    ),
+                    label: 'Profile'
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(_currentScreen == 1 ?
-              CupertinoIcons.person_fill :
-              CupertinoIcons.person
-              ),
-              label: 'Profile'
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

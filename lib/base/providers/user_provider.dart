@@ -4,14 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
-  late SharedPreferences _prefs;
-  late UserModel? _user;
+  UserModel? _user;
+  final SharedPreferences _prefs;
+  UserProvider(this._prefs);
 
-  UserProvider() {
-    init();
+  UserModel? get user {
+    final userJson = _prefs.getString("user");
+    if (userJson != null) {
+      _user = UserModel.fromJson(json.decode(_prefs.getString("user")!));
+    }
+    notifyListeners();
+    return _user;
   }
-
-  UserModel? get user => _user;
 
   set user(UserModel? user) {
     _user = user;
@@ -22,15 +26,6 @@ class UserProvider with ChangeNotifier {
   clearUser() {
     _prefs.remove("user");
     _user = null;
-    notifyListeners();
-  }
-
-  void init() async {
-    _prefs = await SharedPreferences.getInstance();
-    final userJson = _prefs.getString("user");
-    if (userJson != null) {
-      _user = UserModel.fromJson(json.decode(_prefs.getString("user")!));
-    }
     notifyListeners();
   }
 }
